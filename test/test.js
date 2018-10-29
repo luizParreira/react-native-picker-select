@@ -1,6 +1,6 @@
 import React from 'react';
 import { Platform } from 'react-native';
-import RNPickerSelect from '../src/';
+import RNPickerSelectWithRef, { RNPickerSelect } from '../src/';
 
 const selectItems = [
     {

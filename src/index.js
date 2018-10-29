@@ -14,7 +14,7 @@ import {
 import PropTypes from 'prop-types';
 import isEqual from 'lodash.isequal';
 
-export default class RNPickerSelect extends PureComponent {
+export class RNPickerSelect extends PureComponent {
     static propTypes = {
         onValueChange: PropTypes.func.isRequired,
         items: PropTypes.arrayOf(
@@ -284,9 +284,7 @@ export default class RNPickerSelect extends PureComponent {
                     hitSlop={{ top: 2, right: 2, bottom: 2, left: 2 }}
                     testID="done_button"
                 >
-                    <View
-                        testID="needed_for_touchable"
-                    >
+                    <View testID="needed_for_touchable">
                         <Text style={[defaultStyles.done, style.done]}>{doneText}</Text>
                     </View>
                 </TouchableWithoutFeedback>
@@ -425,6 +423,14 @@ export default class RNPickerSelect extends PureComponent {
         return Platform.OS === 'ios' ? this.renderIOS() : this.renderAndroid();
     }
 }
+
+export default React.forwardRef((props, ref) => {
+    return (
+        <RNPickerSelect ref={ref} {...props}>
+            {props.children}
+        </RNPickerSelect>
+    );
+});
 
 const defaultStyles = StyleSheet.create({
     viewContainer: {
