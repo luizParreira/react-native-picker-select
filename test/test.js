@@ -1,5 +1,5 @@
 import React from 'react';
-import { Platform } from 'react-native';
+import { Platform, View } from 'react-native';
 import RNPickerSelect from '../src/';
 
 const selectItems = [
@@ -198,6 +198,7 @@ describe('RNPickerSelect', () => {
         );
 
         expect(wrapper.find('[testID="icon_ios"]')).toHaveLength(0);
+        expect(wrapper.find('[testID="custom_icon_ios"]')).toHaveLength(0);
     });
 
     it("should reset to the first item (typically the placeholder) if a value is passed in that doesn't exist in the `items` array", () => {
@@ -286,5 +287,66 @@ describe('RNPickerSelect', () => {
             .props()
             .onDismiss();
         expect(onDismissSpy).toHaveBeenCalledWith();
+    });
+
+    describe('Custom Icon', () => {
+        const defaultIconStyle = {
+            position: 'absolute',
+            backgroundColor: 'transparent',
+            borderTopWidth: 10,
+            borderTopColor: 'gray',
+            borderRightWidth: 10,
+            borderRightColor: 'transparent',
+            borderLeftWidth: 10,
+            borderLeftColor: 'transparent',
+            width: 0,
+            height: 0,
+            top: 20,
+            right: 10,
+        };
+
+        it('sets style props when icon present', () => {
+            const customIconStyle = { backgroundColor: 'black', top: 9 };
+            const CustomIcon = (props) => {
+                return <View {...props} />;
+            };
+            const wrapper = shallow(
+                <RNPickerSelect
+                    items={selectItems}
+                    placeholder={placeholder}
+                    style={{
+                        icon: customIconStyle,
+                    }}
+                    value={null}
+                    onValueChange={() => {}}
+                    Icon={CustomIcon}
+                />
+            );
+
+            const [defaultStyle, customStyle] = wrapper
+                .find('[testID="custom_icon_ios"]')
+                .props().style;
+            expect(defaultStyle).toEqual(defaultIconStyle);
+            expect(customStyle).toEqual(customIconStyle);
+        });
+
+        it('sets normal ios icon', () => {
+            const customIconStyle = { backgroundColor: 'red', top: 9 };
+            const wrapper = shallow(
+                <RNPickerSelect
+                    items={selectItems}
+                    placeholder={placeholder}
+                    style={{
+                        icon: customIconStyle,
+                    }}
+                    value={null}
+                    onValueChange={() => {}}
+                />
+            );
+
+            const [defaultStyle, customStyle] = wrapper.find('[testID="icon_ios"]').props().style;
+            expect(defaultStyle).toEqual(defaultIconStyle);
+            expect(customStyle).toEqual(customIconStyle);
+        });
     });
 });
